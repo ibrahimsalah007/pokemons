@@ -10,6 +10,7 @@ import environmentVariablesSchema from './core/config/environment-variable.schem
 import { TypeOrmConfigService } from './core/database';
 import { PokemonsModule } from './pokemons/pokemons.module';
 import { TypesModule } from './types/types.module';
+import { PokemonTypesModule } from './pokemon-types/pokemon-types.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,6 +36,7 @@ import { TypesModule } from './types/types.module';
     }),
     PokemonsModule,
     TypesModule,
+    PokemonTypesModule,
   ],
   controllers: [],
 })
