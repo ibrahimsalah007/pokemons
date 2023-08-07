@@ -38,9 +38,7 @@ export class PokemonsService {
   async updatePokemon(query: FindOptionsWhere<Pokemon>, updatePokemonDto: UpdatePokemonDto) {
     await this.findOnePokemonOrFail(query);
 
-    const res = await this.pokemonRepository.update(query, updatePokemonDto);
-    console.log('🚀 ~ file: pokemons.service.ts:42 ~ PokemonsService ~ updatePokemon ~ res:', res.affected, res.raw);
-    return res;
+    return (await this.pokemonRepository.update(query, updatePokemonDto)).raw[0];
   }
 
   async removePokemon(query: FindOptionsWhere<Pokemon>): Promise<void> {
