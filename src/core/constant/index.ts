@@ -1,1 +1,1 @@
-export * from './tables.constant';
+export * from './database-tables.constant';
