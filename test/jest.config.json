@@ -1,0 +1,14 @@
+{
+  "moduleFileExtensions": ["js", "ts"],
+  "rootDir": ".",
+  "testRegex": "[.]spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "coverageDirectory": "./coverage",
+  "testEnvironment": "node",
+  "roots": ["<rootDir>/"],
+  "moduleNameMapper": {
+    "^App/(.*)": "<rootDir>/../src/$1"
+  }
+}
