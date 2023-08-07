@@ -8,5 +8,6 @@ import { PokemonType } from './pokemon-type.entity';
   imports: [TypeOrmModule.forFeature([PokemonType])],
   controllers: [PokemonTypesController],
   providers: [PokemonTypesService],
+  exports: [PokemonTypesService],
 })
 export class PokemonTypesModule {}

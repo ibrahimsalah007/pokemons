@@ -15,16 +15,20 @@ export class PokemonTypesService {
     private readonly pokemonTypeRepository: PokemonTypeRepository,
   ) {}
 
-  async createPokemonType(createPokemonTypeDto: CreatePokemonTypeDto): Promise<PokemonType>;
-  async createPokemonType(createPokemonTypeDto: CreatePokemonTypeDto[]): Promise<PokemonType[]>;
+  async createPokemonType(pokemonId: number, createPokemonTypeDto: CreatePokemonTypeDto): Promise<PokemonType>;
+  async createPokemonType(pokemonId: number, createPokemonTypeDto: CreatePokemonTypeDto[]): Promise<PokemonType[]>;
 
   @Transactional()
   async createPokemonType(
+    pokemonId: number,
     createPokemonTypeDto: CreatePokemonTypeDto | CreatePokemonTypeDto[],
   ): Promise<PokemonType | PokemonType[]> {
-    if (Array.isArray(createPokemonTypeDto)) return this.pokemonTypeRepository.save(createPokemonTypeDto);
+    if (Array.isArray(createPokemonTypeDto))
+      return this.pokemonTypeRepository.save(
+        createPokemonTypeDto.map((pokemonType) => ({ ...pokemonType, pokemonId })),
+      );
 
-    return this.pokemonTypeRepository.save(createPokemonTypeDto);
+    return this.pokemonTypeRepository.save({ ...createPokemonTypeDto, pokemonId });
   }
 
   async findAllPokemonTypes(query: FindOptionsWhere<PokemonType> = {}, pageOptionsDto?: PageOptionDto) {

@@ -5,16 +5,24 @@ import { CreatePokemonDto, UpdatePokemonDto } from './dto';
 import { Pokemon, PokemonRepository } from './pokemon.entity';
 import { PageOptionDto, PaginationService } from 'App/core';
 import { FindOptionsWhere } from 'typeorm';
+import { Transactional } from 'typeorm-transactional';
+import { PokemonTypesService } from 'App/pokemon-types/pokemon-types.service';
 
 @Injectable()
 export class PokemonsService {
   constructor(
     @InjectRepository(Pokemon)
     private readonly pokemonRepository: PokemonRepository,
+    private readonly pokemonTypeService: PokemonTypesService,
   ) {}
 
-  async createPokemon(createPokemonDto: CreatePokemonDto) {
-    return this.pokemonRepository.save(createPokemonDto);
+  @Transactional()
+  async createPokemon({ types, ...createPokemonDto }: CreatePokemonDto) {
+    const pokemon = await this.pokemonRepository.save(createPokemonDto);
+
+    await this.pokemonTypeService.createPokemonType(pokemon.id, types);
+
+    return pokemon;
   }
 
   async findAllPokemons(query: FindOptionsWhere<Pokemon> = {}, pageOptionsDto?: PageOptionDto) {
@@ -38,7 +46,7 @@ export class PokemonsService {
   async updatePokemon(query: FindOptionsWhere<Pokemon>, updatePokemonDto: UpdatePokemonDto) {
     await this.findOnePokemonOrFail(query);
 
-    return (await this.pokemonRepository.update(query, updatePokemonDto)).raw[0];
+    // return (await this.pokemonRepository.update(query, updatePokemonDto)).raw[0];
   }
 
   async removePokemon(query: FindOptionsWhere<Pokemon>): Promise<void> {

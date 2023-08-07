@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { CreatePokemonTypeDto } from 'App/pokemon-types/dto';
+import { Type } from 'class-transformer';
 
-import { IsDefined, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsDefined, IsInt, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 
 export class CreatePokemonDto {
   @ApiProperty()
@@ -34,4 +36,10 @@ export class CreatePokemonDto {
   @IsInt()
   @IsDefined()
   stamina: number;
+
+  @ApiProperty({ type: () => CreatePokemonTypeDto, isArray: true })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreatePokemonTypeDto)
+  types: CreatePokemonTypeDto[];
 }
