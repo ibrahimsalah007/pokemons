@@ -5,7 +5,7 @@ import { PokemonTypesService } from './pokemon-types.service';
 import { CreatePokemonTypeDto, UpdatePokemonTypeDto } from './dto';
 import { PageOptionDto } from 'App/core';
 
-@ApiTags('Pokemons')
+@ApiTags('Pokemon Types')
 @Controller('pokemons/:pokemonId/types')
 export class PokemonTypesController {
   constructor(private readonly pokemonTypesService: PokemonTypesService) {}

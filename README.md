@@ -40,6 +40,18 @@ $ npm i -g pnpm
 $ pnpm install
 ```
 
+### Run Migrations
+
+```bash
+$ pnpm migration:run
+```
+
+### Run Seeder
+
+```bash
+$ pnpm seeder:run
+```
+
 ## Running the app
 
 ```bash
@@ -58,10 +70,8 @@ $ pnpm start:prod
 ```bash
 # unit tests
 $ pnpm test
-
-# e2e tests
-$ pnpm test:e2e
-
-# test coverage
-$ pnpm test:cov
 ```
+
+## Documentation
+
+[http://localhost:{port}/docs](http://localhost:3000/docs) Swagger Documentation.

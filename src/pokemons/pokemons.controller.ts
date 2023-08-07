@@ -3,7 +3,9 @@ import { PokemonsService } from './pokemons.service';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { PageOptionDto } from 'App/core';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Pokemons')
 @Controller('pokemons')
 export class PokemonsController {
   constructor(private readonly pokemonsService: PokemonsService) {}
