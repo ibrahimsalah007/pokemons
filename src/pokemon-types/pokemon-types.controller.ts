@@ -1,34 +1,37 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { PokemonTypesService } from './pokemon-types.service';
-import { CreatePokemonTypeDto } from './dto/create-pokemon-type.dto';
-import { UpdatePokemonTypeDto } from './dto/update-pokemon-type.dto';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('pokemon-types')
+import { PokemonTypesService } from './pokemon-types.service';
+import { CreatePokemonTypeDto, UpdatePokemonTypeDto } from './dto';
+import { PageOptionDto } from 'App/core';
+
+@ApiTags('Pokemons')
+@Controller('pokemons/:pokemonId/types')
 export class PokemonTypesController {
   constructor(private readonly pokemonTypesService: PokemonTypesService) {}
 
   @Post()
-  create(@Body() createPokemonTypeDto: CreatePokemonTypeDto) {
-    return this.pokemonTypesService.create(createPokemonTypeDto);
+  createPokemonType(@Body() createPokemonTypeDto: CreatePokemonTypeDto) {
+    return this.pokemonTypesService.createPokemonType(createPokemonTypeDto);
   }
 
   @Get()
-  findAll() {
-    return this.pokemonTypesService.findAll();
+  findAllPokemonTypes(@Query() query: any, @Query() pageOptionDto: PageOptionDto) {
+    return this.pokemonTypesService.findAllPokemonTypes(query, pageOptionDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pokemonTypesService.findOne(+id);
+  findOnePokemonType(@Param('id') id: number) {
+    return this.pokemonTypesService.findOnePokemonTypeOrFail({ id });
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePokemonTypeDto: UpdatePokemonTypeDto) {
-    return this.pokemonTypesService.update(+id, updatePokemonTypeDto);
+  updatePokemonType(@Param('id') id: number, @Body() updatePokemonTypeDto: UpdatePokemonTypeDto) {
+    return this.pokemonTypesService.updatePokemonType({ id }, updatePokemonTypeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pokemonTypesService.remove(+id);
+  removePokemonType(@Param('id') id: number) {
+    return this.pokemonTypesService.removePokemonType({ id });
   }
 }

@@ -1,26 +1,59 @@
-import { Injectable } from '@nestjs/common';
-import { CreatePokemonTypeDto } from './dto/create-pokemon-type.dto';
-import { UpdatePokemonTypeDto } from './dto/update-pokemon-type.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { FindOptionsWhere } from 'typeorm';
+import { Transactional } from 'typeorm-transactional';
+
+import { CreatePokemonTypeDto, UpdatePokemonTypeDto } from './dto';
+import { PokemonType, PokemonTypeRepository } from './pokemon-type.entity';
+import { PageOptionDto, PaginationService } from 'App/core';
 
 @Injectable()
 export class PokemonTypesService {
-  create(createPokemonTypeDto: CreatePokemonTypeDto) {
-    return 'This action adds a new pokemonType';
+  constructor(
+    @InjectRepository(PokemonType)
+    private readonly pokemonTypeRepository: PokemonTypeRepository,
+  ) {}
+
+  async createPokemonType(createPokemonTypeDto: CreatePokemonTypeDto): Promise<PokemonType>;
+  async createPokemonType(createPokemonTypeDto: CreatePokemonTypeDto[]): Promise<PokemonType[]>;
+
+  @Transactional()
+  async createPokemonType(
+    createPokemonTypeDto: CreatePokemonTypeDto | CreatePokemonTypeDto[],
+  ): Promise<PokemonType | PokemonType[]> {
+    if (Array.isArray(createPokemonTypeDto)) return this.pokemonTypeRepository.save(createPokemonTypeDto);
+
+    return this.pokemonTypeRepository.save(createPokemonTypeDto);
   }
 
-  findAll() {
-    return `This action returns all pokemonTypes`;
+  async findAllPokemonTypes(query: FindOptionsWhere<PokemonType> = {}, pageOptionsDto?: PageOptionDto) {
+    const [pokemonTypes, count] = await this.pokemonTypeRepository.findAndCount({
+      where: query,
+      skip: pageOptionsDto.skip,
+      take: pageOptionsDto.limit,
+    });
+
+    return PaginationService.paginate<PokemonType>(pokemonTypes, count, pageOptionsDto);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} pokemonType`;
+  async findOnePokemonTypeOrFail(query: FindOptionsWhere<PokemonType>) {
+    const pokemonTypes = this.pokemonTypeRepository.findOne({ where: query });
+
+    if (!pokemonTypes) throw new NotFoundException('Pokemon Type not found');
+
+    return pokemonTypes;
   }
 
-  update(id: number, updatePokemonTypeDto: UpdatePokemonTypeDto) {
-    return `This action updates a #${id} pokemonType`;
+  async updatePokemonType(query: FindOptionsWhere<PokemonType>, updatePokemonTypeDto: UpdatePokemonTypeDto) {
+    await this.findOnePokemonTypeOrFail(query);
+
+    return (await this.pokemonTypeRepository.update(query, updatePokemonTypeDto)).raw[0];
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pokemonType`;
+  async removePokemonType(query: FindOptionsWhere<PokemonType>) {
+    await this.findOnePokemonTypeOrFail(query);
+
+    await this.pokemonTypeRepository.softDelete(query);
   }
 }
