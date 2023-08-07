@@ -1,26 +1,49 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTypeDto } from './dto/create-type.dto';
-import { UpdateTypeDto } from './dto/update-type.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { CreateTypeDto, UpdateTypeDto } from './dto';
+import { Type, TypeRepository } from './type.entity';
+import { FindOptionsWhere } from 'typeorm';
+import { PageOptionDto, PaginationService } from 'App/core';
 
 @Injectable()
 export class TypesService {
-  create(createTypeDto: CreateTypeDto) {
-    return 'This action adds a new type';
+  constructor(
+    @InjectRepository(Type)
+    private readonly typeRepository: TypeRepository,
+  ) {}
+
+  async createType(createTypeDto: CreateTypeDto) {
+    return this.typeRepository.save(createTypeDto);
   }
 
-  findAll() {
-    return `This action returns all types`;
+  async findAllTypes(query: FindOptionsWhere<Type> = {}, pageOptionsDto?: PageOptionDto) {
+    const [types, count] = await this.typeRepository.findAndCount({
+      where: query,
+      skip: pageOptionsDto.skip,
+      take: pageOptionsDto.limit,
+    });
+
+    return PaginationService.paginate<Type>(types, count, pageOptionsDto);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} type`;
+  async findOneTypeOrFail(query: FindOptionsWhere<Type>) {
+    const type = this.typeRepository.findOne({ where: query });
+
+    if (!type) throw new NotFoundException('Type not found');
+
+    return type;
   }
 
-  update(id: number, updateTypeDto: UpdateTypeDto) {
-    return `This action updates a #${id} type`;
+  async updateType(query: FindOptionsWhere<Type>, updateTypeDto: UpdateTypeDto) {
+    await this.findOneTypeOrFail(query);
+
+    return (await this.typeRepository.update(query, updateTypeDto)).raw[0];
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} type`;
+  async removeType(query: FindOptionsWhere<Type>) {
+    await this.findOneTypeOrFail(query);
+
+    await this.typeRepository.softDelete(query);
   }
 }

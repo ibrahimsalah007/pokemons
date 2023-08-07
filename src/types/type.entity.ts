@@ -1,4 +1,4 @@
-import { Column, DeleteDateColumn, Entity } from 'typeorm';
+import { Column, DeleteDateColumn, Entity, Repository } from 'typeorm';
 
 import { TYPES } from 'App/core/constant';
 import { BaseEntity } from 'App/core';
@@ -14,3 +14,5 @@ export class Type extends BaseEntity {
   @DeleteDateColumn()
   deletedAt: Date;
 }
+
+export type TypeRepository = Repository<Type>;
