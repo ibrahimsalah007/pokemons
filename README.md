@@ -80,7 +80,7 @@ $ pnpm test
 
 `Filter Fields`
 
-`/pokemons?filter[name][eq]=Bulbasaur&filter[attck[gte]=90&filter[attack][lte]=100&filter[attack][between]=90,100`
+`/pokemons?filter[name][eq]=Bulbasaur&filter[attack][gte]=90&filter[attack][lte]=100&filter[attack][between]=90,100`
 
 `Select Specific Fields`
 
