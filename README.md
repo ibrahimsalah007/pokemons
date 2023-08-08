@@ -74,4 +74,4 @@ $ pnpm test
 
 ## Documentation
 
-[http://localhost:{port}/docs](http://localhost:3000/docs) Swagger Documentation.
+[http://localhost:{port}/docs](http://localhost:{port}/docs) Swagger Documentation.
