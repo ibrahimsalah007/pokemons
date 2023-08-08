@@ -3,7 +3,9 @@ import { ApiTags } from '@nestjs/swagger';
 
 import { TypesService } from './types.service';
 import { CreateTypeDto, UpdateTypeDto } from './dto';
-import { PageOptionDto } from 'App/core';
+import { PageOptionDto, FindOptionsBuilderPipe } from 'App/core';
+import { Type } from './type.entity';
+import { FindManyOptions } from 'typeorm';
 
 @ApiTags('Types')
 @Controller('types')
@@ -16,7 +18,10 @@ export class TypesController {
   }
 
   @Get()
-  findAllTypes(@Query() query: any, @Query() pageOptionDto: PageOptionDto) {
+  findAllTypes(
+    @Query(new FindOptionsBuilderPipe<Type>()) query: FindManyOptions<Type>,
+    @Query() pageOptionDto: PageOptionDto,
+  ) {
     return this.typesService.findAllTypes(query, pageOptionDto);
   }
 

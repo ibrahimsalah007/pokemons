@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { CreateTypeDto, UpdateTypeDto } from './dto';
 import { Type, TypeRepository } from './type.entity';
-import { FindOptionsWhere } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere } from 'typeorm';
 import { PageOptionDto, PaginationService } from 'App/core';
 
 @Injectable()
@@ -17,9 +17,11 @@ export class TypesService {
     return this.typeRepository.save(createTypeDto);
   }
 
-  async findAllTypes(query: FindOptionsWhere<Type> = {}, pageOptionsDto?: PageOptionDto) {
+  async findAllTypes(query: FindManyOptions<Type> = {}, pageOptionsDto?: PageOptionDto) {
     const [types, count] = await this.typeRepository.findAndCount({
-      where: query,
+      where: query.where,
+      select: query.select,
+      relations: query.relations,
       skip: pageOptionsDto.skip,
       take: pageOptionsDto.limit,
     });

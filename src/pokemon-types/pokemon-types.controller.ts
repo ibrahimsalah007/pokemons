@@ -3,7 +3,9 @@ import { ApiTags } from '@nestjs/swagger';
 
 import { PokemonTypesService } from './pokemon-types.service';
 import { CreatePokemonTypeDto, UpdatePokemonTypeDto } from './dto';
-import { PageOptionDto } from 'App/core';
+import { FindOptionsBuilderPipe, PageOptionDto } from 'App/core';
+import { PokemonType } from './pokemon-type.entity';
+import { FindManyOptions } from 'typeorm';
 
 @ApiTags('Pokemon Types')
 @Controller('pokemons/:pokemonId/types')
@@ -18,10 +20,12 @@ export class PokemonTypesController {
   @Get()
   findAllPokemonTypes(
     @Param('pokemonId') pokemonId: number,
-    @Query() query: any,
+    @Query(new FindOptionsBuilderPipe<PokemonType>()) query: FindManyOptions<PokemonType>,
     @Query() pageOptionDto: PageOptionDto,
   ) {
-    return this.pokemonTypesService.findAllPokemonTypes({ ...query, pokemonId }, pageOptionDto);
+    query.where['pokemonId'] = pokemonId;
+
+    return this.pokemonTypesService.findAllPokemonTypes(query, pageOptionDto);
   }
 
   @Get(':id')
