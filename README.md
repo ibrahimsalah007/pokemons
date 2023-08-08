@@ -75,3 +75,17 @@ $ pnpm test
 ## Documentation
 
 [http://localhost:{port}/docs](http://localhost:{port}/docs) Swagger Documentation.
+
+# Find Options
+
+`Filter Fields`
+
+`/pokemons?filter[name][eq]=Bulbasaur&filter[attck[gte]=90&filter[attack][lte]=100&filter[attack][between]=90,100`
+
+`Select Specific Fields`
+
+`?select[]=name&select[]=id`
+
+`Load Relations`
+
+`?include[]=types`
