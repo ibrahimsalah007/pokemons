@@ -8,6 +8,9 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
 
 import environmentVariablesSchema from './core/config/environment-variable.schema';
 import { TypeOrmConfigService } from './core/database';
+import { PokemonsModule } from './pokemons/pokemons.module';
+import { TypesModule } from './types/types.module';
+import { PokemonTypesModule } from './pokemon-types/pokemon-types.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -31,6 +34,9 @@ import { TypeOrmConfigService } from './core/database';
         return addTransactionalDataSource(dataSource);
       },
     }),
+    PokemonsModule,
+    TypesModule,
+    PokemonTypesModule,
   ],
   controllers: [],
 })
