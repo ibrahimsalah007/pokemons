@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { FindOptionsWhere } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
 
 import { CreatePokemonTypeDto, UpdatePokemonTypeDto } from './dto';
@@ -31,9 +31,11 @@ export class PokemonTypesService {
     return this.pokemonTypeRepository.save({ ...createPokemonTypeDto, pokemonId });
   }
 
-  async findAllPokemonTypes(query: FindOptionsWhere<PokemonType> = {}, pageOptionsDto?: PageOptionDto) {
+  async findAllPokemonTypes(query: FindManyOptions<PokemonType> = {}, pageOptionsDto?: PageOptionDto) {
     const [pokemonTypes, count] = await this.pokemonTypeRepository.findAndCount({
-      where: query,
+      where: query.where,
+      select: query.select,
+      relations: query.relations,
       skip: pageOptionsDto.skip,
       take: pageOptionsDto.limit,
     });

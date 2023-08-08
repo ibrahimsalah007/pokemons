@@ -1,9 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  HttpCode,
+  HttpStatus,
+  UsePipes,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+
+import { FindManyOptions } from 'typeorm';
 
 import { PokemonsService } from './pokemons.service';
 import { CreatePokemonDto, UpdatePokemonDto } from './dto';
-import { PageOptionDto } from 'App/core';
+import { PageOptionDto, FindOptionsBuilderPipe } from 'App/core';
+import { Pokemon } from './pokemon.entity';
 
 @ApiTags('Pokemons')
 @Controller('pokemons')
@@ -16,7 +31,11 @@ export class PokemonsController {
   }
 
   @Get()
-  findAllPokemons(@Query() query: any, pageOptionDto: PageOptionDto) {
+  @UsePipes()
+  findAllPokemons(
+    @Query(new FindOptionsBuilderPipe<Pokemon>()) query: FindManyOptions,
+    @Query() pageOptionDto: PageOptionDto,
+  ) {
     return this.pokemonsService.findAllPokemons(query, pageOptionDto);
   }
 

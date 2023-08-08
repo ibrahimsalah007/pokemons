@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePokemonDto, UpdatePokemonDto } from './dto';
 import { Pokemon, PokemonRepository } from './pokemon.entity';
 import { PageOptionDto, PaginationService } from 'App/core';
-import { FindOptionsWhere } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
 import { PokemonTypesService } from 'App/pokemon-types/pokemon-types.service';
 
@@ -25,9 +25,12 @@ export class PokemonsService {
     return pokemon;
   }
 
-  async findAllPokemons(query: FindOptionsWhere<Pokemon> = {}, pageOptionsDto?: PageOptionDto) {
+  async findAllPokemons(query: FindManyOptions<Pokemon> = {}, pageOptionsDto?: PageOptionDto) {
     const [pokemons, count] = await this.pokemonRepository.findAndCount({
-      where: query,
+      where: query.where,
+      relations: query.relations,
+      select: query.select,
+
       skip: pageOptionsDto.skip,
       take: pageOptionsDto.limit,
     });
