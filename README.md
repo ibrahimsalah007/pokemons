@@ -28,48 +28,42 @@
 
 ## Installation
 
-### PNPM
-
-```bash
-$ npm i -g pnpm
-```
-
 ### Install Dependencies
 
 ```bash
-$ pnpm install
+$ npm install
 ```
 
 ### Run Migrations
 
 ```bash
-$ pnpm migration:run
+$ npm run migration:run
 ```
 
 ### Run Seeder
 
 ```bash
-$ pnpm seeder:run
+$ npm run seeder:run
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ pnpm start
+$ npm start
 
 # watch mode
-$ pnpm start:dev
+$ npm run start:dev
 
 # production mode
-$ pnpm start:prod
+$ npm run start:prod
 ```
 
 ## Test
 
 ```bash
 # unit tests
-$ pnpm test
+$ npm run test
 ```
 
 ## Documentation
